@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-xl font-bold mb-4">Scraping Web con XPath - RobertoSgD</h1>
+        <label class="block mb-2">URL:</label>
+        <input id="url" type="text" class="w-full p-2 border rounded mb-4" placeholder="Ingrese la URL">
+        <label class="block mb-2">XPath:</label>
+        <input id="xpath" type="text" class="w-full p-2 border rounded mb-4" placeholder="Ingrese el XPath">
+        <button id="scrapeBtn" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition-all duration-300">
+            Realizar Scraping
+        </button>
+                <h2 class="text-lg font-semibold mt-4">Resultados:</h2>
+        <div id="resultado" class="mt-2 p-2 border rounded bg-gray-50"></div>
+    </div>
+    <script>
+        /**
+         * Función para realizar scraping de una URL y aplicar un XPath.
+         */
+        async function realizarScraping() {
+            const urlInput = document.getElementById("url").value;
+            const xpathInput = document.getElementById("xpath").value;
+            const resultadoContainer = document.getElementById("resultado");
+            resultadoContainer.innerHTML = "";
+
+            try {
+                // Obtener el HTML de la página
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`);
+                if (!response.ok) throw new Error("No se pudo obtener la página");
+                
+                const data = await response.json();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, "text/html");
+                
+                // Aplicar XPath
+                const xpathResult = document.evaluate(xpathInput, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                if (xpathResult.snapshotLength === 0) throw new Error("No se encontraron resultados para el XPath proporcionado");
+                
+                // Mostrar resultados
+                for (let i = 0; i < xpathResult.snapshotLength; i++) {
+                    const node = xpathResult.snapshotItem(i);
+                    
+                    if (xpathInput.endsWith("/@src")) { 
+                        // Si el XPath busca atributos src de imágenes, crear elementos <img>
+                        const img = document.createElement("img");
+                        img.src = node.textContent; // URL de la imagen
+                        img.className = "w-full max-w-xs my-2 border rounded"; // Tailwind CSS para estilo
+                        resultadoContainer.appendChild(img);
+                    } else {
+                        // Para otros resultados, seguir mostrando texto normalmente
+                        const item = document.createElement("div");
+                        item.textContent = node.textContent || node.outerHTML;
+                        item.className = "p-2 border rounded bg-gray-100 my-1";
+                        resultadoContainer.appendChild(item);
+                    }
+                }
+            } catch (error) {
+                resultadoContainer.innerHTML = `<p class='text-red-500'>Error: ${error.message}</p>`;
+            }
+        }
+
+        // Event Listener para el botón
+        document.getElementById("scrapeBtn").addEventListener("click", realizarScraping);
+    </script>
+</body>
+</html>

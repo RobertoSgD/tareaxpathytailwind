@@ -1,0 +1,43 @@
+# Web Scraper con XPath y Tailwind CSS
+
+Este proyecto es una aplicación web simple que permite realizar scraping de contenido web directamente desde el cliente (navegador), utilizando JavaScript, XPath y Tailwind CSS. Los usuarios pueden ingresar una URL y un XPath para extraer elementos específicos del HTML de la página.
+
+## Características
+- Permite ingresar una URL y un XPath para extraer datos específicos de una página web.
+- Utiliza `fetch()` para obtener el HTML de la página de forma asíncrona.
+- Aplica XPath sobre el código HTML utilizando `document.evaluate()`.
+- Soporta la extracción de imágenes mostrando las imágenes directamente en la interfaz.
+- Diseño responsivo y estilizado con Tailwind CSS.
+- Manejo de errores para URLs inválidas o consultas XPath sin resultados.
+
+## Tecnologías utilizadas
+- **HTML**: Estructura básica de la página.
+- **JavaScript**: Lógica para realizar el scraping.
+- **Tailwind CSS**: Diseño moderno y responsivo.
+
+## Instalación y uso
+Este proyecto no requiere instalación de dependencias, ya que a la hora de instalar TailWind me dió error, en su lugar use el script <script src="https://cdn.tailwindcss.com"></script> para traerlo a mi página.
+
+También puedes desplegarlo en GitHub Pages siguiendo estos pasos:
+1. **Subir el proyecto a GitHub**.
+2. **Ir a Configuración > Pages** y seleccionar la rama con el código.
+3. **Esperar unos minutos** y acceder a la URL proporcionada por GitHub Pages.
+
+## Cómo usarlo
+1. Ingresar la URL de la página web que deseas analizar.
+2. Escribir un XPath válido para extraer elementos.
+3. Hacer clic en el botón "Realizar Scraping".
+4. Los resultados se mostrarán en la parte inferior, en forma de texto o imágenes si se usa `//img/@src`.
+
+## Explicación del código
+El código utiliza `fetch()` para obtener el contenido HTML de la URL ingresada. Luego, parsea el HTML con `DOMParser` y aplica XPath mediante `document.evaluate()`. Si el XPath apunta a atributos `src` de imágenes, el código genera elementos `<img>` dinámicamente para mostrarlas en la interfaz. Todo esto se ejecuta de manera asíncrona y con manejo de errores para mejorar la experiencia del usuario.
+
+## Ejemplo de XPath
+- **`//h1`** → Extrae todos los títulos `<h1>` de la página.
+- **`//p`** → Extrae todos los párrafos.
+- **`//a/@href`** → Extrae todos los enlaces de la página.
+- **`//img/@src`** → Extrae y muestra todas las imágenes.
+
+## Créditos
+Desarrollado por Roberto Segado Díaz.
+
